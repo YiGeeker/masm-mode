@@ -1,20 +1,19 @@
-;; masm-mode.el --- MASM x86 and x64 assembly major mode -*- lexical-binding: t; -*-
+;;; masm-mode.el --- MASM x86 and x64 assembly major mode -*- lexical-binding: t; -*-
 
 ;; This is free and unencumbered software released into the public domain.
 
 ;; Author: YiGeeker <zyfchinese@yeah.net>
-;; URL: https://github.com/YiGeeker/masm-mode
-;; Package-Version: 20200113
 ;; Version: 1.0.0
 ;; Package-Requires: ((emacs "24.3"))
+;; Keywords: masm, assembly
+;; URL: https://github.com/YiGeeker/masm-mode
 
 ;;; Commentary:
 
 ;; A major mode for editing MASM x86 and x64 assembly programs. It
-;; includes syntax highlighting, automatic comment indentation
+;; includes syntax highlighting, automatic comment indentation.
 
 ;;; Code:
-
 
 (defgroup masm-mode nil
   "Options for `masm-mode'."
@@ -53,11 +52,6 @@
   '((t :inherit (font-lock-keyword-face)))
   "Face for directives."
   :group 'masm-mode-faces)
-
-;; (defface masm-preprocessor
-;;   '((t :inherit (font-lock-preprocessor-face)))
-;;   "Face for preprocessor directives."
-;;   :group 'masm-mode-faces)
 
 (defface masm-labels
   '((t :inherit (font-lock-function-name-face)))
@@ -514,14 +508,6 @@
   `(eval-when-compile
      (regexp-opt ,keywords 'words)))
 
-;; (defconst masm-full-instruction-regexp
-;;   (eval-when-compile
-;;     (let ((pfx (masm--opt masm-prefix))
-;;           (ins (masm--opt masm-instructions)))
-;;       (concat "^\\(" pfx "\\s-+\\)?" ins "$")))
-;;   "Regexp for `masm-mode' matching a valid full MASM instruction field.
-;; This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
-
 (defconst masm-font-lock-keywords
   `((,(masm--opt masm-section-name) . 'masm-section-name)
     (,(masm--opt masm-registers) . 'masm-registers)
@@ -540,8 +526,6 @@
     (modify-syntax-entry ?_  "w")
     (modify-syntax-entry ?@  "w")
     (modify-syntax-entry ?\? "w")
-    ;; (modify-syntax-entry ?#  "_")
-    ;; (modify-syntax-entry ?~  "_")
     (modify-syntax-entry ?\. "w")
     (modify-syntax-entry ?\; "<")
     (modify-syntax-entry ?\n ">")
@@ -591,33 +575,6 @@
     (if (eql indent col)
 	(indent-line-to indent))))
 
-;; (defun masm-indent-line ()
-;;   "Indent current line (or insert a tab) as MASM assembly code.
-;; This will be called by `indent-for-tab-command' when TAB is
-;; pressed. We indent the entire line as appropriate whenever POINT
-;; is not immediately after a mnemonic; otherwise, we insert a tab."
-;;   (interactive)
-;;   (let ((before      ; text before point and after indentation
-;;          (save-excursion
-;;            (let ((point (point))
-;;                  (bti (progn (back-to-indentation) (point))))
-;;              (buffer-substring-no-properties bti point)))))
-;;     (if (string-match masm-full-instruction-regexp before)
-;;         ;; We are immediately after a mnemonic
-;;         (cl-case masm-after-mnemonic-whitespace
-;;           (:tab   (insert "\t"))
-;;           (:space (insert-char ?\s masm-basic-offset)))
-;;       ;; We're literally anywhere else, indent the whole line
-;;       (let ((orig (- (point-max) (point))))
-;;         (back-to-indentation)
-;;         (if (or (looking-at (masm--opt masm-prefix))
-;; 		(looking-at (masm--opt masm-instructions))
-;; 		(looking-at (masm--opt masm-section-name)))
-;;             (indent-line-to masm-basic-offset)
-;;           (indent-line-to 0))
-;;         (when (> (- (point-max) orig) (point))
-;;           (setf (point) (- (point-max) orig)))))))
-
 ;; (defun masm--current-line ()
 ;;   "Return the current line as a string."
 ;;   (save-excursion
@@ -649,10 +606,6 @@
           (start (progn (beginning-of-line) (point)))
           (end (progn (back-to-indentation) (point))))
       (and (<= start point) (<= point end)))))
-
-;; (defun masm-comment-indent ()
-;;   "Compute desired indentation for comment on the current line."
-;;   comment-column)
 
 (defun masm-insert-comment ()
   "Insert a comment if the current line doesn’t contain one."
@@ -701,29 +654,13 @@ With a prefix arg, kill the comment on the current line with
      ;; Otherwise insert.
      ((insert ";")))))
 
-;; (defun masm-join-line (join-following-p)
-;;   "Like `join-line', but use a tab when joining with a label."
-;;   (interactive "*P")
-;;   (join-line join-following-p)
-;;   (if (looking-back masm-label-regexp (line-beginning-position))
-;;       (let ((column (current-column)))
-;;         (cond ((< column masm-basic-offset)
-;;                (delete-char 1)
-;;                (insert-char ?\t))
-;;               ((and (= column masm-basic-offset) (eql ?: (char-before)))
-;;                (delete-char 1))))
-;;     (masm-indent-line)))
-
 ;;;###autoload
 (define-derived-mode masm-mode prog-mode "MASM"
   "Major mode for editing MASM assembly programs."
   :group 'masm-mode
   (setq local-abbrev-table masm-mode-abbrev-table)
   (set (make-local-variable 'font-lock-defaults) '(masm-font-lock-keywords nil :case-fold))
-  ;; (set (make-local-variable 'indent-line-function) #'masm-indent-line)
   (set (make-local-variable 'comment-start) ";")
-  ;; (set (make-local-variable 'comment-insert-comment-function) #'masm-insert-comment) 
-  ;; (set (make-local-variable 'comment-indent-function) #'masm-comment-indent)
   (use-local-map (nconc (make-sparse-keymap) masm-mode-map)))
 
 (provide 'masm-mode)
