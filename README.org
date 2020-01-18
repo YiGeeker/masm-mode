@@ -1,0 +1,5 @@
+* masm-mode
+
+/masm-mode/ is a major mode for editing MASM x64 assembly programs. It
+includes syntax highlighting, automatic comment indentation. Requires
+Emacs 24.3 or higher.
