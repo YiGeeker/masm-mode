@@ -15,8 +15,6 @@
 
 ;;; Code:
 
-(require 'imenu)
-
 (defgroup masm-mode nil
   "Options for `masm-mode'."
   :link '(custom-group-link :tag "Font Lock Faces group" font-lock-faces)
@@ -89,7 +87,7 @@
   :group 'masm-mode)
 
 (defvar-local masm--program-type
-  (if masm-program-type t nil)
+  masm-program-type
   "Decided by customizable value.")
 
 (defvar-local masm--compile-command-used nil
@@ -423,12 +421,12 @@
     (if (eql indent col)
 	(indent-line-to indent))))
 
-;; (defun masm--current-line ()
-;;   "Return the current line as a string."
-;;   (save-excursion
-;;     (let ((start (progn (beginning-of-line) (point)))
-;;           (end (progn (end-of-line) (point))))
-;;       (buffer-substring-no-properties start end))))
+(defun masm--current-line ()
+  "Return the current line as a string."
+  (save-excursion
+    (let ((start (progn (beginning-of-line) (point)))
+          (end (progn (end-of-line) (point))))
+      (buffer-substring-no-properties start end))))
 
 (defun masm--empty-line-p ()
   "Return non-nil if current line has non-whitespace."
@@ -657,6 +655,13 @@ With a prefix arg, kill the comment on the current line with
       (call-interactively #'masm-win32)
     (call-interactively #'masm-win64)))
 
+(defun masm-mode-after ()
+  (when (not (eql masm--program-type masm-program-type))
+    (setq masm--program-type masm-program-type)
+    (if masm-program-type
+	(setq-local font-lock-keywords masm-win64-font-lock-keywords)
+      (setq-local font-lock-keywords masm-win32-font-lock-keywords))))
+
 ;;;###autoload
 (define-derived-mode masm-mode prog-mode "MASM"
   "Major mode for editing MASM assembly programs."
@@ -667,7 +672,8 @@ With a prefix arg, kill the comment on the current line with
     (set (make-local-variable 'font-lock-defaults) '(masm-win32-font-lock-keywords nil :case-fold)))
   (set (make-local-variable 'comment-start) ";")
   (set (make-local-variable 'imenu-generic-expression) masm-imenu-generic-expression)
-  (use-local-map (nconc (make-sparse-keymap) masm-mode-map)))
+  (use-local-map (nconc (make-sparse-keymap) masm-mode-map))
+  (add-hook 'after-change-major-mode-hook #'masm-mode-after))
 
 (provide 'masm-mode)
 
