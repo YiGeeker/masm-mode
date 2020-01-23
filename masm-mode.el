@@ -384,8 +384,8 @@
       '(menu-item "Insert Colon" masm-colon
 		  :help "Insert a colon; if it follows a label, delete the label's indentation"))    
     (define-key map [menu-bar masm-mode masm-change-program-type]
-      '(menu-item "Swithch program type" masm-change-program-type
-		  :help "Swithch between Win32 and Win64"))
+      '(menu-item "Switch program type" masm-change-program-type
+		  :help "Switch between Win32 and Win64"))
     (define-key map [menu-bar masm-mode masm-link]
       '(menu-item "Link the obj file" masm-link
 		  :help "Use link to link the obj file"))
@@ -456,7 +456,11 @@
 (defun masm-insert-comment ()
   "Insert a comment if the current line doesn’t contain one."
   (let ((comment-insert-comment-function nil))
-    (comment-indent)))
+    (if (or (masm--empty-line-p) (nth 3 (syntax-ppss)))
+	(progn
+	  (indent-line-to 0)
+	  (insert ";"))
+      (comment-indent))))
 
 (defun masm-comment (&optional arg)
   "Begin or edit a comment with context-sensitive placement.
@@ -483,7 +487,7 @@ With a prefix arg, kill the comment on the current line with
      ;; Empty line, or inside a string? Insert.
      ((or (masm--empty-line-p) (nth 3 (syntax-ppss)))
       (indent-line-to 0)
-      (insert "; "))
+      (insert ";"))
      ;; Inside the indentation? Comment out the line.
      ((masm--inside-indentation-p)
       (insert ";"))
@@ -655,7 +659,16 @@ With a prefix arg, kill the comment on the current line with
       (call-interactively #'masm-win32)
     (call-interactively #'masm-win64)))
 
+(defun masm-mode-initialize ()
+  "Relate .asm and .inc file to masm mode."
+  (setq auto-mode-alist
+	(append
+	 '(("\\.asm\\'" . masm-mode)
+	   ("\\.inc\\'" . masm-mode))
+	 auto-mode-alist)))
+
 (defun masm-mode-after ()
+  "Make sure that file local variables work."
   (when (not (eql masm--program-type masm-program-type))
     (setq masm--program-type masm-program-type)
     (if masm-program-type
@@ -671,9 +684,14 @@ With a prefix arg, kill the comment on the current line with
       (set (make-local-variable 'font-lock-defaults) '(masm-win64-font-lock-keywords nil :case-fold))
     (set (make-local-variable 'font-lock-defaults) '(masm-win32-font-lock-keywords nil :case-fold)))
   (set (make-local-variable 'comment-start) ";")
+  (set (make-local-variable 'comment-insert-comment-function) #'masm-insert-comment)
   (set (make-local-variable 'imenu-generic-expression) masm-imenu-generic-expression)
   (use-local-map (nconc (make-sparse-keymap) masm-mode-map))
   (add-hook 'after-change-major-mode-hook #'masm-mode-after))
+
+;;;###autoload
+(eval-after-load 'masm-mode
+    '(masm-mode-initialize))
 
 (provide 'masm-mode)
 
