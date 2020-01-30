@@ -174,8 +174,7 @@
       "ds" "dx" "eax" "ebp" "ebx" "ecx" "edi" "edx" "eip" "es" "esi"
       "esp" "fpr0" "fpr1" "fpr2" "fpr3" "fpr4" "fpr5" "fpr6" "fpr7"
       "fs" "gs" "ip" "mmx0" "mmx1" "mmx2" "mmx3" "mmx4" "mmx5" "mmx6"
-      "mmx7" "si" "sp" "ss" "st" "tr3" "tr4" "tr5" "tr6" "tr7" "xmm0"
-      "xmm1" "xmm2" "xmm3" "xmm4" "xmm5" "xmm6" "xmm7")
+      "mmx7" "si" "sp" "ss" "st" "tr3" "tr4" "tr5" "tr6" "tr7" )
     "MASM registers for `masm-mode'."))
 
 
@@ -185,23 +184,27 @@
       "r12b" "r12d" "r12w" "r13" "r13b" "r13d" "r13w" "r14" "r14b"
       "r14d" "r14w" "r15" "r15b" "r15d" "r15w" "r8" "r8b" "r8d" "r8w"
       "r9" "r9b" "r9d" "r9w" "rax" "rbp" "rbx" "rcx" "rdi" "rdx" "rip"
-      "rsi" "rsp" "xmm10" "xmm11" "xmm12" "xmm13" "xmm14" "xmm15"
-      "xmm8" "xmm9")
+      "rsi" "rsp" "xmm0" "xmm1" "xmm10" "xmm11" "xmm12" "xmm13"
+      "xmm14" "xmm15" "xmm2" "xmm3" "xmm4" "xmm5" "xmm6" "xmm7" "xmm8"
+      "xmm9")
     "MASM win64 registers for `masm-mode'."))
 
 (eval-and-compile
   (defconst masm-instructions-common
-    '("aaa" "aad" "aam" "aas" "adc" "add" "and" "arpl" "bound" "bsf"
-      "bsr" "bswap" "bt" "btc" "btr" "bts" "call" "clc" "cld" "cli"
-      "clts" "cmp" "cmps" "cmpsb" "cmpsw" "cmpxchg" "cwd" "daa" "das"
-      "dec" "div" "enter" "esc" "f2xm1" "fabs" "fadd" "faddp" "fbld"
-      "fbstp" "fchs" "fclex" "fcom" "fcomp" "fcompp" "fcos" "fdecstp"
-      "fdisi" "fdiv" "fdivp" "fdivr" "fdivrp" "feni" "ffree" "fiadd"
-      "ficom" "ficomp" "fidiv" "fidivr" "fild" "fimul" "fincstp"
-      "finit" "fist" "fistp" "fisub" "fisubr" "fld" "fld1" "fldcw"
-      "fldenv" "fldenvd" "fldenvw" "fldl2e" "fldl2t" "fldlg2" "fldln2"
-      "fldpi" "fldz" "fmul" "fmulp" "fnclex" "fndisi" "fneni" "fninit"
-      "fnop" "fnsave" "fnsaved" "fnsavew" "fnstcw" "fnstenv"
+    '("aaa" "aad" "aam" "aas" "adc" "adcx" "add" "addpd" "addps"
+      "addsd" "addss" "addsubpd" "addsubps" "adox" "aesdec"
+      "aesdeclast" "aesenc" "aesenclast" "aesimc" "aeskeygenassist"
+      "and" "andn" "andnpd" "andnps" "andpd" "andps" "arpl" "bound"
+      "bsf" "bsr" "bswap" "bt" "btc" "btr" "bts" "call" "clc" "cld"
+      "cli" "clts" "cmp" "cmps" "cmpsb" "cmpsw" "cmpxchg" "cwd" "daa"
+      "das" "dec" "div" "enter" "esc" "f2xm1" "fabs" "fadd" "faddp"
+      "fbld" "fbstp" "fchs" "fclex" "fcom" "fcomp" "fcompp" "fcos"
+      "fdecstp" "fdisi" "fdiv" "fdivp" "fdivr" "fdivrp" "feni" "ffree"
+      "fiadd" "ficom" "ficomp" "fidiv" "fidivr" "fild" "fimul"
+      "fincstp" "finit" "fist" "fistp" "fisub" "fisubr" "fld" "fld1"
+      "fldcw" "fldenv" "fldenvd" "fldenvw" "fldl2e" "fldl2t" "fldlg2"
+      "fldln2" "fldpi" "fldz" "fmul" "fmulp" "fnclex" "fndisi" "fneni"
+      "fninit" "fnop" "fnsave" "fnsaved" "fnsavew" "fnstcw" "fnstenv"
       "fnstenvd" "fnstenvw" "fnstsw" "fpatan" "fprem" "fprem1" "fptan"
       "frndint" "frstor" "frstord" "frstorw" "fsave" "fsaved" "fsavew"
       "fscale" "fsetpm" "fsin" "fincos" "fsqrt" "fst" "fstcw" "fstenv"
@@ -216,20 +219,49 @@
       "les" "lfs" "lgdt" "lgs" "lidt" "lldt" "lmsw" "lods" "lodsb"
       "lodsd" "lodsw" "loop" "loopd" "loope" "looped" "loopew"
       "loopne" "loopned" "loopnz" "loopnzd" "loopnzw" "loopw" "loopz"
-      "loopzd" "loopzw" "lsl" "lss" "ltr" "mov" "movs" "movsb" "movsd"
-      "movsx" "movsw" "movzx" "mul" "nop" "not" "or" "out" "outs"
-      "outsb" "outsd" "outsw" "pop" "popa" "popad" "popf" "popfd"
-      "push" "pusha" "pushad" "pushd" "pushf" "pushfd" "pushw" "rcl"
-      "rcr" "ret" "retf" "retn" "rol" "ror" "sahf" "sal" "sar" "sbb"
-      "scas" "scasb" "scasd" "scasw" "seta" "setae" "setb" "setbe"
-      "setc" "sete" "setg" "setge" "setl" "setle" "setna" "setnae"
-      "setnb" "setnbe" "setnc" "setne" "setng" "setnge" "setnl"
-      "setnle" "setno" "setnp" "setns" "setnz" "seto" "setp" "setpe"
-      "setpo" "sets" "setz" "shld" "shl" "shld" "shr" "shrd" "sidt"
-      "sldt" "smsw" "stc" "std" "sti" "str" "stos" "stosb" "stosd"
-      "stosw" "sub" "test" "verr" "verw" "wbinvd" "xadd" "xchg" "xlat"
-      "xlatb" "xor")
+      "loopzd" "loopzw" "lsl" "lss" "ltr" "mov" "movapd" "movaps"
+      "movbe" "movd" "movddup" "movdq2q" "movdqa" "movdqu" "movhlps"
+      "movhpd" "movhps" "movlhps" "movlpd" "movlps" "movmskpd"
+      "movmskps" "movntdq" "movntdqa" "movnti" "movntpd" "movntps"
+      "movntq" "movntsd" "movntss" "movq" "movq2dq" "movs" "movsb"
+      "movsd" "movsx" "movsw" "movzx" "mul" "nop" "not" "or" "out"
+      "outs" "outsb" "outsd" "outsw" "pabsb" "pabsd" "pabsw"
+      "packssdw" "packsswb" "packusdw" "packuswb" "paddb" "paddd"
+      "paddq" "paddsb" "paddsiw" "paddsw" "paddusb" "paddusw" "paddw"
+      "palignr" "pand" "pandn" "pause" "paveb" "pavgb" "pavgusb"
+      "pavgw" "pblendvb" "pblendw" "pclmulhqhqdq" "pclmulhqlqdq"
+      "pclmullqhqdq" "pclmullqlqdq" "pclmulqdq" "pcmpeqb" "pcmpeqd"
+      "pcmpeqq" "pcmpeqw" "pcmpestri" "pcmpestrm" "pcmpgtb" "pcmpgtd"
+      "pcmpgtq" "pcmpgtw" "pcmpistri" "pcmpistrm" "pdep" "pdistib"
+      "pext" "pextrb" "pextrd" "pextrq" "pextrw" "pf2id" "pf2iw"
+      "pfacc" "pfadd" "pfcmpeq" "pfcmpge" "pfcmpgt" "pfmax" "pfmin"
+      "pfmul" "pfnacc" "pfpnacc" "pfrcp" "pfrcpit1" "pfrcpit2"
+      "pfrcpv" "pfrsqit1" "pfrsqrt" "pfrsqrtv" "pfsub" "pfsubr"
+      "phaddd" "phaddsw" "phaddw" "phminposuw" "phsubd" "phsubsw"
+      "phsubw" "pi2fd" "pi2fw" "pinsrb" "pinsrd" "pinsrq" "pinsrw"
+      "pmachriw" "pmaddubsw" "pmaddwd" "pmagw" "pmaxsb" "pmaxsd"
+      "pmaxsw" "pmaxub" "pmaxud" "pmaxuw" "pminsb" "pminsd" "pminsw"
+      "pminub" "pminud" "pminuw" "pmovmskb" "pmovsxbd" "pmovsxbq"
+      "pmovsxbw" "pmovsxdq" "pmovsxwd" "pmovsxwq" "pmovzxbd"
+      "pmovzxbq" "pmovzxbw" "pmovzxdq" "pmovzxwd" "pmovzxwq" "pmuldq"
+      "pmulhriw" "pmulhrsw" "pmulhrwa" "pmulhrwc" "pmulhuw" "pmulhw"
+      "pmulld" "pmullw" "pmuludq" "pmvgezb" "pmvlzb" "pmvnzb" "pmvzb"
+      "pop" "popa" "popf" "popfd" "push" "pusha" "pushd" "pushf"
+      "pushfd" "pushw" "rcl" "rcr" "ret" "retf" "retn" "rol" "ror"
+      "sahf" "sal" "sar" "sbb" "scas" "scasb" "scasd" "scasw" "seta"
+      "setae" "setb" "setbe" "setc" "sete" "setg" "setge" "setl"
+      "setle" "setna" "setnae" "setnb" "setnbe" "setnc" "setne"
+      "setng" "setnge" "setnl" "setnle" "setno" "setnp" "setns"
+      "setnz" "seto" "setp" "setpe" "setpo" "sets" "setz" "shld" "shl"
+      "shld" "shr" "shrd" "sidt" "sldt" "smsw" "stc" "std" "sti" "str"
+      "stos" "stosb" "stosd" "stosw" "sub" "test" "verr" "verw"
+      "wbinvd" "xadd" "xchg" "xlat" "xlatb" "xor")
     "MASM instructions for `masm-mode'."))
+
+(eval-and-compile
+  (defconst masm-instructions-win32-only
+    '("pushad" "popad")
+    "MASM Win32 instructions for `masm-mode'."))
 
 (eval-and-compile
   (defconst masm-section-name
@@ -255,11 +287,12 @@
       ".err" ".err1" ".err2" ".errb" ".errdef" ".errdif" ".errdifi"
       ".erre" ".erridn" ".erridni" ".errnb" ".errndef" ".errnz"
       ".exit" ".fardata" ".fardata?" ".if" ".lall" ".lfcond" ".list"
-      ".listall" ".listif" ".listmacro" ".listmacroall" ".model" ".msfloat"
-      ".no87" ".nocref" ".nolist" ".nolistif" ".nolistmacro"
-      ".radix"".repeat" ".sall" ".seq" ".sfcond" ".startup" ".tfcond"
-      ".type" ".until" ".untilcxz" ".while" ".xall" ".xcref" ".xlist" "%out"
-      "carry?" "invoke" "overflow?" "parity?" "sign?" "zero?")
+      ".listall" ".listif" ".listmacro" ".listmacroall" ".mmx"
+      ".model" ".msfloat" ".no87" ".nocref" ".nolist" ".nolistif"
+      ".nolistmacro" ".radix"".repeat" ".sall" ".seq" ".sfcond"
+      ".startup" ".tfcond" ".type" ".until" ".untilcxz" ".while"
+      ".xall" ".xcref" ".xlist" "%out" "carry?" "invoke" "overflow?"
+      "parity?" "sign?" "zero?")
     "MASM win32 directives for `masm-mode'."))
 
 (eval-and-compile
@@ -278,7 +311,7 @@
       "org" "page" "popcontext" "proc" "proto" "ptr" "public" "purge"
       "pushcontext" "record" "repeat" "rept" "seg" "segment" "short"
       "size" "sizeof" "sizestr" "struc" "struct" "substr" "subtitle"
-      "subttl" "textequ" "this" "title" "type" "typedef" "union"
+      "subttl" "textequ" "this" "title" "type" "typedef" "union" "uses"
       "while")
     "MASM directives for `masm-mode'."))
 
@@ -323,6 +356,7 @@
     (,(masm--opt masm-registers-common) . 'masm-registers)
     (,(masm--opt masm-types) . 'masm-types)
     (,(masm--opt masm-instructions-common) . 'masm-instructions)
+    (,(masm--opt masm-instructions-win32-only) . 'masm-instructions)
     (,(masm--opt masm-prefix) . 'masm-prefix)
     (,masm-label-regexp (1 'masm-labels))
     (,masm-subprogram-regexp (1 'masm-subprogram))
