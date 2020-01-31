@@ -4,14 +4,15 @@
 
 ;; Author: YiGeeker <zyfchinese@yeah.net>
 ;; Version: 1.0.0
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: masm, assembly
 ;; URL: https://github.com/YiGeeker/masm-mode
 
 ;;; Commentary:
 
-;; A major mode for editing MASM x86 and x64 assembly programs. It
-;; includes syntax highlighting, automatic comment indentation.
+;; A major mode for editing MASM x86 and x64 assembly code.  It
+;; includes syntax highlighting, automatic comment indentation
+;; and various build commands.
 
 ;;; Code:
 
@@ -104,7 +105,7 @@
   :group 'masm-mode)
 
 (defvar masm-mode-abbrev-table nil
-  "Abbrev table used while in masm mode.")
+  "Abbrev table used while in `masm-mode'.")
 (define-abbrev-table 'masm-mode-abbrev-table ())
 
 (defface masm-registers
@@ -321,7 +322,7 @@
 
 (defconst masm-subprogram-regexp
   "\\(\\_<[a-zA-Z_@]+\\_>\\)[ \t]+\\(proc\\|endp\\)\\s-*"
-  "Regexp for `masm-mode' for matching subprogram")
+  "Regexp for `masm-mode' for matching subprogram.")
 
 (defconst masm-constant-regexp
   "\\<[-+]?\\([0-9]+[Dd]?\\|[01]+[Bb]\\|[0-7]+[Qq]\\|[0-9A-Fa-f]+[Hh]\\)\\([-+]\\([0-9]+[Dd]?\\|[01]+[Bb]\\|[0-7]+[Qq]\\|[0-9A-Fa-f]+[Hh]\\)\\)*\\>"
@@ -329,15 +330,15 @@
 
 (defconst masm-struct-regexp
   "\\(\\_<[a-zA-Z_@]+\\_>\\)[ \t]+\\(struct\\|ends\\)\\s-*"
-  "Regexp for `masm-mode' for matching struct")
+  "Regexp for `masm-mode' for matching struct.")
 
 (defconst masm-union-regexp
   "\\(\\_<[a-zA-Z_@]+\\_>\\)[ \t]+\\(union\\|ends\\)\\s-*"
-  "Regexp for `masm-mode' for matching struct")
+  "Regexp for `masm-mode' for matching struct.")
 
 (defconst masm-macro-regexp
   "\\(\\_<[a-zA-Z_@]+\\_>\\)[ \t]+macro\\s-*"
-  "Regexp for `masm-mode' for matching macro")
+  "Regexp for `masm-mode' for matching macro.")
 
 (defmacro masm--opt (keywords)
   "Prepare KEYWORDS for `looking-at'."
@@ -416,7 +417,7 @@
 		  :help "Insert a newline, then indent according to major mode"))
     (define-key map [menu-bar masm-mode masm-colon]
       '(menu-item "Insert Colon" masm-colon
-		  :help "Insert a colon; if it follows a label, delete the label's indentation"))    
+		  :help "Insert a colon; if it follows a label, delete the label's indentation"))
     (define-key map [menu-bar masm-mode masm-change-program-type]
       '(menu-item "Switch program type" masm-change-program-type
 		  :help "Switch between Win32 and Win64"))
@@ -446,7 +447,7 @@
 (defun masm-newline-and-indent ()
   "Auto-indent the new line."
   (interactive)
-  (let ((indent 
+  (let ((indent
 	 (save-excursion
 	   (back-to-indentation)
 	   (current-column)))
@@ -467,7 +468,7 @@
   (not (string-match-p "\\S-" (masm--current-line))))
 
 (defun masm--line-has-comment-p ()
-  "Return non-nil if current line contains a comment."
+  "Return non-nil if current line contain a comment."
   (save-excursion
     (end-of-line)
     (nth 4 (syntax-ppss))))
@@ -512,7 +513,7 @@ code and the comment gutter.
   This is intended prevent interference when the intention is to
   comment out the line.
 
-With a prefix arg, kill the comment on the current line with
+With a prefix ARG, kill the comment on the current line with
 `comment-kill'."
   (interactive "p")
   (if (not (eql arg 1))
@@ -542,7 +543,7 @@ With a prefix arg, kill the comment on the current line with
   "Compile command in `masm-mode'."
   (interactive
    (list (if (buffer-modified-p)
-	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before compile?" (current-buffer)))))
+	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before compile? " (current-buffer)))))
 	       (if savep
 		   (save-buffer))))
 	 (if masm--compile-command-used
@@ -634,7 +635,7 @@ With a prefix arg, kill the comment on the current line with
   "Build command in `masm-mode'."
   (interactive
    (list (if (buffer-modified-p)
-	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before build?" (current-buffer)))))
+	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before build? " (current-buffer)))))
 	       (if savep
 		   (save-buffer))))
 	 (if masm--build-command-used
@@ -693,14 +694,6 @@ With a prefix arg, kill the comment on the current line with
       (call-interactively #'masm-win32)
     (call-interactively #'masm-win64)))
 
-(defun masm-mode-initialize ()
-  "Relate .asm and .inc file to masm mode."
-  (setq auto-mode-alist
-	(append
-	 '(("\\.asm\\'" . masm-mode)
-	   ("\\.inc\\'" . masm-mode))
-	 auto-mode-alist)))
-
 (defun masm-mode-after ()
   "Make sure that file local variables work."
   (when (not (eql masm--program-type masm-program-type))
@@ -724,8 +717,9 @@ With a prefix arg, kill the comment on the current line with
   (add-hook 'after-change-major-mode-hook #'masm-mode-after))
 
 ;;;###autoload
-(eval-after-load 'masm-mode
-    '(masm-mode-initialize))
+(add-to-list 'auto-mode-alist '("\\.asm\\'" . masm-mode))
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.inc\\'" . masm-mode))
 
 (provide 'masm-mode)
 
