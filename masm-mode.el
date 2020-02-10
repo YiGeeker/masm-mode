@@ -489,7 +489,7 @@
   (save-excursion
     (let ((point (point))
           (start (line-beginning-position))
-          (end (progn (back-to-indentation) (point))))
+          (end (save-excursion (back-to-indentation) (point))))
       (and (<= start point) (<= point end)))))
 
 (defun masm-insert-comment ()
