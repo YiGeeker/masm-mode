@@ -463,8 +463,8 @@
 (defun masm--current-line ()
   "Return the current line as a string."
   (save-excursion
-    (let ((start (progn (beginning-of-line) (point)))
-          (end (progn (end-of-line) (point))))
+    (let ((start (line-beginning-position))
+          (end (line-end-position)))
       (buffer-substring-no-properties start end))))
 
 (defun masm--empty-line-p ()
@@ -488,7 +488,7 @@
   "Return non-nil if point is within the indentation."
   (save-excursion
     (let ((point (point))
-          (start (progn (beginning-of-line) (point)))
+          (start (line-beginning-position))
           (end (progn (back-to-indentation) (point))))
       (and (<= start point) (<= point end)))))
 
