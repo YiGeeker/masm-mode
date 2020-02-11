@@ -28,7 +28,7 @@
 (defcustom masm-program-type t
   "Syntax for `masm-mode', t for Win64 and nil for Win32."
   :type '(choice (const :tag "Win64" t)
-		 (const :tag "Win32" nil))
+                 (const :tag "Win32" nil))
   :group 'masm-mode)
 
 (defcustom masm-win32-compile-args '("/c" "/coff")
@@ -102,7 +102,7 @@
   "Save changed link command.")
 
 (defvar-local masm--build-command-used nil
-   "Save changed build command.")
+  "Save changed build command.")
 
 (defgroup masm-mode-faces ()
   "Faces used by `masm-mode'."
@@ -186,12 +186,12 @@
 (eval-and-compile
   (defconst masm-registers-win64-only
     '( "r10" "r10b" "r10d" "r10w" "r11" "r11b" "r11d" "r11w" "r12"
-      "r12b" "r12d" "r12w" "r13" "r13b" "r13d" "r13w" "r14" "r14b"
-      "r14d" "r14w" "r15" "r15b" "r15d" "r15w" "r8" "r8b" "r8d" "r8w"
-      "r9" "r9b" "r9d" "r9w" "rax" "rbp" "rbx" "rcx" "rdi" "rdx" "rip"
-      "rsi" "rsp" "xmm0" "xmm1" "xmm10" "xmm11" "xmm12" "xmm13"
-      "xmm14" "xmm15" "xmm2" "xmm3" "xmm4" "xmm5" "xmm6" "xmm7" "xmm8"
-      "xmm9")
+       "r12b" "r12d" "r12w" "r13" "r13b" "r13d" "r13w" "r14" "r14b"
+       "r14d" "r14w" "r15" "r15b" "r15d" "r15w" "r8" "r8b" "r8d" "r8w"
+       "r9" "r9b" "r9d" "r9w" "rax" "rbp" "rbx" "rcx" "rdi" "rdx" "rip"
+       "rsi" "rsp" "xmm0" "xmm1" "xmm10" "xmm11" "xmm12" "xmm13"
+       "xmm14" "xmm15" "xmm2" "xmm3" "xmm4" "xmm5" "xmm6" "xmm7" "xmm8"
+       "xmm9")
     "MASM win64 registers for `masm-mode'."))
 
 (eval-and-compile
@@ -352,8 +352,8 @@
 (defconst masm-imenu-generic-expression
   `((nil ,(concat "^\\s-*" masm-label-regexp) 1)
     (nil ,(concat "\\(\\_<[a-zA-Z_@]+\\_>\\)[ \t]+"
-		  (masm--opt '("proc" "macro")))
-	 1))
+                  (masm--opt '("proc" "macro")))
+         1))
   "Expressions for `imenu-generic-expression'.")
 
 (defconst masm-win32-font-lock-keywords
@@ -405,38 +405,38 @@
 (defvar masm-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Note that the comment character isn't set up until masm-mode is called.
-    (define-key map ":"		#'masm-colon)
-    (define-key map "\C-c;"	#'comment-region)
-    (define-key map ";"         #'masm-comment)
-    (define-key map "\C-j"	#'masm-newline-and-indent)
-    (define-key map "\C-m"	#'masm-newline-and-indent)
-    (define-key map "\C-c\C-c"  #'masm-build)
-    (define-key map "\C-c\C-b"  #'masm-compile)
-    (define-key map "\C-c\C-l"  #'masm-link)
-    (define-key map "\C-c\C-s"  #'masm-change-program-type)
+    (define-key map ":"        #'masm-colon)
+    (define-key map "\C-c;"    #'comment-region)
+    (define-key map ";"        #'masm-comment)
+    (define-key map "\C-j"     #'masm-newline-and-indent)
+    (define-key map "\C-m"     #'masm-newline-and-indent)
+    (define-key map "\C-c\C-c" #'masm-build)
+    (define-key map "\C-c\C-b" #'masm-compile)
+    (define-key map "\C-c\C-l" #'masm-link)
+    (define-key map "\C-c\C-s" #'masm-change-program-type)
     (define-key map [menu-bar masm-mode] (cons "Masm" (make-sparse-keymap)))
-    
+
     (define-key map [menu-bar masm-mode newline-and-indent]
       '(menu-item "Insert Newline and Indent" masm-newline-and-indent
-		  :help "Insert a newline, then indent according to major mode"))
+                  :help "Insert a newline, then indent according to major mode"))
     (define-key map [menu-bar masm-mode masm-colon]
       '(menu-item "Insert Colon" masm-colon
-		  :help "Insert a colon; if it follows a label, delete the label's indentation"))
+                  :help "Insert a colon; if it follows a label, delete the label's indentation"))
     (define-key map [menu-bar masm-mode masm-change-program-type]
       '(menu-item "Switch program type" masm-change-program-type
-		  :help "Switch between Win32 and Win64"))
+                  :help "Switch between Win32 and Win64"))
     (define-key map [menu-bar masm-mode masm-link]
       '(menu-item "Link the obj file" masm-link
-		  :help "Use link to link the obj file"))
+                  :help "Use link to link the obj file"))
     (define-key map [menu-bar masm-mode masm-compile]
       '(menu-item "Compile the file" masm-compile
-		  :help "Use ml64 to compile the file"))
+                  :help "Use ml64 to compile the file"))
     (define-key map [menu-bar masm-mode masm-build]
       '(menu-item "Build the project" masm-build
-		  :help "Use nmake to build the project"))
+                  :help "Use nmake to build the project"))
     (define-key map [menu-bar masm-mode comment-region]
       '(menu-item "Comment Region" comment-region
-		  :help "Comment or uncomment each line in the region"))
+                  :help "Comment or uncomment each line in the region"))
     map)
   "Keymap for masm mode.")
 
@@ -452,19 +452,19 @@
   "Auto-indent the new line."
   (interactive)
   (let ((indent
-	 (save-excursion
-	   (back-to-indentation)
-	   (current-column)))
-	(col (current-column)))
+         (save-excursion
+           (back-to-indentation)
+           (current-column)))
+        (col (current-column)))
     (newline-and-indent)
     (if (eql indent col)
-	(indent-line-to indent))))
+        (indent-line-to indent))))
 
 (defun masm--current-line ()
   "Return the current line as a string."
   (save-excursion
-    (let ((start (progn (beginning-of-line) (point)))
-          (end (progn (end-of-line) (point))))
+    (let ((start (line-beginning-position))
+          (end (line-end-position)))
       (buffer-substring-no-properties start end))))
 
 (defun masm--empty-line-p ()
@@ -488,17 +488,17 @@
   "Return non-nil if point is within the indentation."
   (save-excursion
     (let ((point (point))
-          (start (progn (beginning-of-line) (point)))
-          (end (progn (back-to-indentation) (point))))
+          (start (line-beginning-position))
+          (end (save-excursion (back-to-indentation) (point))))
       (and (<= start point) (<= point end)))))
 
 (defun masm-insert-comment ()
   "Insert a comment if the current line doesn’t contain one."
   (let ((comment-insert-comment-function nil))
     (if (or (masm--empty-line-p) (nth 3 (syntax-ppss)))
-	(progn
-	  (indent-line-to 0)
-	  (insert ";"))
+        (progn
+          (indent-line-to 0)
+          (insert ";"))
       (comment-indent))))
 
 (defun masm-comment (&optional arg)
@@ -547,135 +547,135 @@ With a prefix ARG, kill the comment on the current line with
   "Compile COMMAND in `masm-mode'."
   (interactive
    (list (if (buffer-modified-p)
-	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before compile? " (current-buffer)))))
-	       (if savep
-		   (save-buffer))))
-	 (if masm--compile-command-used
-	     (read-shell-command "Compile command: " masm--compile-command-used)
-	   (let ((command (if masm--program-type
-			      (concat
-			       "ml64 "
-			       (mapconcat (lambda (str) str) masm-win64-compile-args " ")
-			       " "
-			       (file-name-nondirectory buffer-file-name))
-			    (concat
-			     "ml "
-			     (mapconcat (lambda (str) str) masm-win32-compile-args " ")
-			     " "
-			     (file-name-nondirectory buffer-file-name)))))
-	     (read-shell-command "Compile command: " command)))))
+             (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before compile? " (current-buffer)))))
+               (if savep
+                   (save-buffer))))
+         (if masm--compile-command-used
+             (read-shell-command "Compile command: " masm--compile-command-used)
+           (let ((command (if masm--program-type
+                              (concat
+                               "ml64 "
+                               (mapconcat (lambda (str) str) masm-win64-compile-args " ")
+                               " "
+                               (file-name-nondirectory buffer-file-name))
+                            (concat
+                             "ml "
+                             (mapconcat (lambda (str) str) masm-win32-compile-args " ")
+                             " "
+                             (file-name-nondirectory buffer-file-name)))))
+             (read-shell-command "Compile command: " command)))))
   (setq masm--compile-command-used command)
   (if masm--program-type
       (let ((process-environment
-	     (append
-	      (list
-	       (concat "PATH=" masm-win64-executable-path ";"
-		       (getenv "path"))
-	       (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
-		       (getenv "include"))
-	       (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
-		       (getenv "lib")))
-	      process-environment)))
-	(compilation-start
-	 command nil (lambda (_maj-mode)
-		       "*masm x64 compile*")))
+             (append
+              (list
+               (concat "PATH=" masm-win64-executable-path ";"
+                       (getenv "path"))
+               (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
+                       (getenv "include"))
+               (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
+                       (getenv "lib")))
+              process-environment)))
+        (compilation-start
+         command nil (lambda (_maj-mode)
+                       "*masm x64 compile*")))
     (let ((process-environment
-	     (append
-	      (list
-	       (concat "PATH=" masm-win32-executable-path ";"
-		       (getenv "path"))
-	       (concat "INCLUDE=" (mapconcat 'file-name-as-directory masm-win32-include-path ";")
-		       (getenv "include"))
-	       (concat "LIB=" (mapconcat 'file-name-as-directory masm-win32-library-path ";")
-		       (getenv "lib")))
-	      process-environment)))
-	(compilation-start
-	 command nil (lambda (_maj-mode)
-		       "*masm x86 compile*")))))
+           (append
+            (list
+             (concat "PATH=" masm-win32-executable-path ";"
+                     (getenv "path"))
+             (concat "INCLUDE=" (mapconcat 'file-name-as-directory masm-win32-include-path ";")
+                     (getenv "include"))
+             (concat "LIB=" (mapconcat 'file-name-as-directory masm-win32-library-path ";")
+                     (getenv "lib")))
+            process-environment)))
+      (compilation-start
+       command nil (lambda (_maj-mode)
+                     "*masm x86 compile*")))))
 
 
 (defun masm-link (command)
   "Compile COMMAND in `masm-mode'."
   (interactive
    (list (if masm--link-command-used
-	     (read-shell-command "Link command: " masm--link-command-used)
-	   (let ((command (concat
-			   "link "
-			   (mapconcat (lambda (str) str) (if masm--program-type masm-win64-link-args masm-win32-link-args) " ")
-			   " "
-			   (file-name-base buffer-file-name)
-			   ".obj")))
-	     (read-shell-command "Link command: " command)))))
+             (read-shell-command "Link command: " masm--link-command-used)
+           (let ((command (concat
+                           "link "
+                           (mapconcat (lambda (str) str) (if masm--program-type masm-win64-link-args masm-win32-link-args) " ")
+                           " "
+                           (file-name-base buffer-file-name)
+                           ".obj")))
+             (read-shell-command "Link command: " command)))))
   (setq masm--link-command-used command)
   (if masm--program-type
       (let ((process-environment
-	     (append
-	      (list
-	       (concat "PATH=" masm-win64-executable-path ";"
-		       (getenv "path"))
-	       (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
-		       (getenv "include"))
-	       (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
-		       (getenv "lib")))
-	      process-environment)))
-	(compilation-start
-	 command nil (lambda (_maj-mode)
-		       "*masm x64 link*")))
+             (append
+              (list
+               (concat "PATH=" masm-win64-executable-path ";"
+                       (getenv "path"))
+               (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
+                       (getenv "include"))
+               (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
+                       (getenv "lib")))
+              process-environment)))
+        (compilation-start
+         command nil (lambda (_maj-mode)
+                       "*masm x64 link*")))
     (let ((process-environment
-	     (append
-	      (list
-	       (concat "PATH=" masm-win32-executable-path ";"
-		       (getenv "path"))
-	       (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win32-include-path ";")
-		       (getenv "include"))
-	       (concat "LIB=" (mapconcat #'file-name-as-directory masm-win32-library-path ";")
-		       (getenv "lib")))
-	      process-environment)))
-	(compilation-start
-	 command nil (lambda (_maj-mode)
-		       "*masm x86 link*")))))
+           (append
+            (list
+             (concat "PATH=" masm-win32-executable-path ";"
+                     (getenv "path"))
+             (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win32-include-path ";")
+                     (getenv "include"))
+             (concat "LIB=" (mapconcat #'file-name-as-directory masm-win32-library-path ";")
+                     (getenv "lib")))
+            process-environment)))
+      (compilation-start
+       command nil (lambda (_maj-mode)
+                     "*masm x86 link*")))))
 
 (defun masm-build (_savep command)
   "Build COMMAND in `masm-mode'."
   (interactive
    (list (if (buffer-modified-p)
-	     (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before build? " (current-buffer)))))
-	       (if savep
-		   (save-buffer))))
-	 (if masm--build-command-used
-	     (read-shell-command "Build command: " masm--build-command-used)
-	   (let ((command (concat
-			   masm-build-executable " "
-			   (mapconcat (lambda (str) str) masm-build-args " "))))
-	     (read-shell-command "Build command: " command)))))
+             (let ((savep (y-or-n-p (format "Buffer %s modified; Save it before build? " (current-buffer)))))
+               (if savep
+                   (save-buffer))))
+         (if masm--build-command-used
+             (read-shell-command "Build command: " masm--build-command-used)
+           (let ((command (concat
+                           masm-build-executable " "
+                           (mapconcat (lambda (str) str) masm-build-args " "))))
+             (read-shell-command "Build command: " command)))))
   (setq masm--build-command-used command)
   (if masm--program-type
       (let ((process-environment
-	 (append
-	  (list
-	   (concat "PATH=" masm-win64-executable-path ";"
-		   (getenv "path"))
-	   (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
-		   (getenv "include"))
-	   (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
-		   (getenv "lib")))
-	  process-environment)))
-    (compilation-start
-     command nil (lambda (_maj-mode)
-		   "*masm x64 build*")))
+             (append
+              (list
+               (concat "PATH=" masm-win64-executable-path ";"
+                       (getenv "path"))
+               (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win64-include-path ";")
+                       (getenv "include"))
+               (concat "LIB=" (mapconcat #'file-name-as-directory masm-win64-library-path ";")
+                       (getenv "lib")))
+              process-environment)))
+        (compilation-start
+         command nil (lambda (_maj-mode)
+                       "*masm x64 build*")))
     (let ((process-environment
-	 (append
-	  (list
-	   (concat "PATH=" masm-win32-executable-path ";"
-		   (getenv "path"))
-	   (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win32-include-path ";")
-		   (getenv "include"))
-	   (concat "LIB=" (mapconcat #'file-name-as-directory masm-win32-library-path ";")
-		   (getenv "lib")))
-	  process-environment)))
-    (compilation-start
-     command nil (lambda (_maj-mode)
-		   "*masm x86 build*")))))
+           (append
+            (list
+             (concat "PATH=" masm-win32-executable-path ";"
+                     (getenv "path"))
+             (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win32-include-path ";")
+                     (getenv "include"))
+             (concat "LIB=" (mapconcat #'file-name-as-directory masm-win32-library-path ";")
+                     (getenv "lib")))
+            process-environment)))
+      (compilation-start
+       command nil (lambda (_maj-mode)
+                     "*masm x86 build*")))))
 
 (defun masm-win32 ()
   "Change to Win32 highlighting."
@@ -703,7 +703,7 @@ With a prefix ARG, kill the comment on the current line with
   (unless (eql masm--program-type masm-program-type)
     (setq masm--program-type masm-program-type)
     (if masm-program-type
-	(setq-local font-lock-keywords masm-win64-font-lock-keywords)
+        (setq-local font-lock-keywords masm-win64-font-lock-keywords)
       (setq-local font-lock-keywords masm-win32-font-lock-keywords))))
 
 ;;;###autoload
@@ -726,5 +726,9 @@ With a prefix ARG, kill the comment on the current line with
 (add-to-list 'auto-mode-alist '("\\.inc\\'" . masm-mode))
 
 (provide 'masm-mode)
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; End:
 
 ;;; masm-mode.el ends here
