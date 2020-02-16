@@ -14,9 +14,10 @@
 
 ;;; Commentary:
 
-;; A major mode for editing MASM x86 and x64 assembly code.  It
-;; includes syntax highlighting, automatic comment indentation
-;; and various build commands.
+;; A major mode for editing MASM x86 and x64 assembly code. It
+;; includes syntax highlighting, automatic comment indentation and
+;; various build commands.
+;; Notice: masm-mode will clobber Emacs's built-in asm-mode.
 
 ;;; Code:
 
@@ -584,9 +585,9 @@ With a prefix ARG, kill the comment on the current line with
             (list
              (concat "PATH=" masm-win32-executable-path ";"
                      (getenv "path"))
-             (concat "INCLUDE=" (mapconcat 'file-name-as-directory masm-win32-include-path ";")
+             (concat "INCLUDE=" (mapconcat #'file-name-as-directory masm-win32-include-path ";")
                      (getenv "include"))
-             (concat "LIB=" (mapconcat 'file-name-as-directory masm-win32-library-path ";")
+             (concat "LIB=" (mapconcat #'file-name-as-directory masm-win32-library-path ";")
                      (getenv "lib")))
             process-environment)))
       (compilation-start
@@ -698,7 +699,7 @@ With a prefix ARG, kill the comment on the current line with
       (call-interactively #'masm-win32)
     (call-interactively #'masm-win64)))
 
-(defun masm-mode-after ()
+(defun masm-mode-before ()
   "Make sure that file local variables work."
   (unless (eql masm--program-type masm-program-type)
     (setq masm--program-type masm-program-type)
@@ -712,13 +713,13 @@ With a prefix ARG, kill the comment on the current line with
   :group 'masm-mode
   (setq local-abbrev-table masm-mode-abbrev-table)
   (if masm--program-type
-      (set (make-local-variable 'font-lock-defaults) '(masm-win64-font-lock-keywords nil :case-fold))
-    (set (make-local-variable 'font-lock-defaults) '(masm-win32-font-lock-keywords nil :case-fold)))
-  (set (make-local-variable 'comment-start) ";")
-  (set (make-local-variable 'comment-insert-comment-function) #'masm-insert-comment)
-  (set (make-local-variable 'imenu-generic-expression) masm-imenu-generic-expression)
-  (use-local-map (nconc (make-sparse-keymap) masm-mode-map))
-  (add-hook 'after-change-major-mode-hook #'masm-mode-after))
+      (setq-local font-lock-defaults '(masm-win64-font-lock-keywords nil :case-fold))
+    (setq-local font-lock-defaults '(masm-win32-font-lock-keywords nil :case-fold)))
+  (setq-local comment-start ";")
+  (setq-local comment-insert-comment-function #'masm-insert-comment)
+  (setq-local imenu-generic-expression masm-imenu-generic-expression)
+    
+  (add-hook 'after-change-major-mode-hook #'masm-mode-before :local t))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.asm\\'" . masm-mode))
