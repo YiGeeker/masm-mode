@@ -719,7 +719,7 @@ With a prefix ARG, kill the comment on the current line with
   (setq-local comment-insert-comment-function #'masm-insert-comment)
   (setq-local imenu-generic-expression masm-imenu-generic-expression)
     
-  (add-hook 'after-change-major-mode-hook #'masm-mode-before :local t))
+  (add-hook 'after-change-major-mode-hook #'masm-mode-before t t))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.asm\\'" . masm-mode))
