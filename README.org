@@ -3,7 +3,7 @@
 * masm-mode
 
 ** Overview
-/masm-mode/ is a major mode for editing MASM x86 and x64 assembly
+~masm-mode~ is a major mode for editing MASM x86 and x64 assembly
 code. It includes syntax highlighting, automatic comment indentation
 and various build commands. Requires Emacs 25.1 or higher.
 
@@ -38,7 +38,7 @@ below.
 | Keybinding | Command                  | Description                                                           |
 |------------+--------------------------+-----------------------------------------------------------------------|
 | ~C-c C-c~  | masm-build               | Use the /nmake/ program to build the project.                         |
-| ~C-c C-b~  | masm-compile             | Use the /ml/(or /ml64/) program to compile the current assembly file. |
+| ~C-c C-b~  | masm-compile             | Use the /ml/ (or /ml64/) program to compile the current assembly file.   |
 | ~C-c C-l~  | masm-link                | Use the /link/ program to link the obj files.                         |
 | ~C-c C-s~  | masm-change-program-type | Change the highlight keywords between Win64 and Win32.                |
 
