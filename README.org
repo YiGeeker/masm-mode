@@ -1,5 +1,46 @@
+[[http://melpa.org/#/masm-mode][file:http://melpa.org/packages/masm-mode-badge.svg]]
+
 * masm-mode
 
+** Overview
 /masm-mode/ is a major mode for editing MASM x86 and x64 assembly
 code. It includes syntax highlighting, automatic comment indentation
 and various build commands. Requires Emacs 25.1 or higher.
+
+** Installation
+*** Install via melpa
+The recommended way to install ~masm-mode~ is via ~package.el~ - the
+built-in package manager in Emacs. ~masm-mode~ is available on the
+~package.el~ community maintained repos - [[http://melpa.org][MELPA]].
+
+M-x ~package-install~ [RET] ~masm-mode~ [RET]
+
+** Settings
+- ~masm-program-win64~ - If non-nil, the keywords of Win64 is highlighted and customizable variables prefixed with ~masm-win32~ are ignored. If nil the keywords of Win32 is highlighted and customizable variables prefixed with ~masm-win64~ are ignored.
+- ~masm-win32-compile-args~ - Arguments for the /ml/ program.
+- ~masm-win32-link-args~ - Arguments for the Win32 /link/ program.
+- ~masm-win32-executable-path~ - Path for the /ml/ program.
+- ~masm-win32-include-path~ - Path for Win32 inc files.
+- ~masm-win32-library-path~ - Path for Win32 lib files.
+- ~masm-win64-compile-args~ - Arguments for the /ml64/ program.
+- ~masm-win64-link-args~ - Arguments for the Win64 /link/ program.
+- ~masm-win64-executable-path~ - Path for the /ml64/ program.
+- ~masm-win64-include-path~ - Path for Win64 inc files.
+- ~masm-win64-library-path~ - Path for Win64 lib files.
+- ~masm-build-executable~ - Executable for building the assembly project.
+- ~masm-build-args~ - Arguments for the build command.
+
+** Commands
+When using ~masm-mode~ some features depend on ~masm-program-win64~ as
+descripted in [[#Settings][Settings]]. ~masm-mode~ provides default bindings in table
+below.
+
+| Keybinding | Command                  | Description                                                           |
+|------------+--------------------------+-----------------------------------------------------------------------|
+| ~C-c C-c~  | masm-build               | Use the /nmake/ program to build the project.                         |
+| ~C-c C-b~  | masm-compile             | Use the /ml/(or /ml64/) program to compile the current assembly file. |
+| ~C-c C-l~  | masm-link                | Use the /link/ program to link the obj files.                         |
+| ~C-c C-s~  | masm-change-program-type | Change the highlight keywords between Win64 and Win32.                |
+
+** Notice
+~masm-mode~ will clobber Emacs's built-in ~asm-mode~.

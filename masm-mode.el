@@ -26,7 +26,7 @@
   :link '(custom-group-link :tag "Font Lock Faces group" font-lock-faces)
   :group 'languages)
 
-(defcustom masm-program-type t
+(defcustom masm-program-win64 t
   "Syntax for `masm-mode', t for Win64 and nil for Win32."
   :type '(choice (const :tag "Win64" t)
                  (const :tag "Win32" nil))
@@ -83,17 +83,17 @@
   :group 'masm-mode)
 
 (defcustom masm-build-executable "nmake"
-  "Default executable for building the program in `masm-mode'."
+  "Default executable for building the assembly project in `masm-mode'."
   :type 'string
   :group 'masm-mode)
 
 (defcustom masm-build-args ()
-  "Default arguments for build command in `masm-mode'."
+  "Default arguments for the build command in `masm-mode'."
   :type '(repeat string)
   :group 'masm-mode)
 
-(defvar-local masm--program-type
-  masm-program-type
+(defvar-local masm--program-win64
+  masm-program-win64
   "Decided by customizable value.")
 
 (defvar-local masm--compile-command-used nil
@@ -553,7 +553,7 @@ With a prefix ARG, kill the comment on the current line with
                    (save-buffer))))
          (if masm--compile-command-used
              (read-shell-command "Compile command: " masm--compile-command-used)
-           (let ((command (if masm--program-type
+           (let ((command (if masm--program-win64
                               (concat
                                "ml64 "
                                (mapconcat (lambda (str) str) masm-win64-compile-args " ")
@@ -566,7 +566,7 @@ With a prefix ARG, kill the comment on the current line with
                              (file-name-nondirectory buffer-file-name)))))
              (read-shell-command "Compile command: " command)))))
   (setq masm--compile-command-used command)
-  (if masm--program-type
+  (if masm--program-win64
       (let ((process-environment
              (append
               (list
@@ -602,13 +602,13 @@ With a prefix ARG, kill the comment on the current line with
              (read-shell-command "Link command: " masm--link-command-used)
            (let ((command (concat
                            "link "
-                           (mapconcat (lambda (str) str) (if masm--program-type masm-win64-link-args masm-win32-link-args) " ")
+                           (mapconcat (lambda (str) str) (if masm--program-win64 masm-win64-link-args masm-win32-link-args) " ")
                            " "
                            (file-name-base buffer-file-name)
                            ".obj")))
              (read-shell-command "Link command: " command)))))
   (setq masm--link-command-used command)
-  (if masm--program-type
+  (if masm--program-win64
       (let ((process-environment
              (append
               (list
@@ -650,7 +650,7 @@ With a prefix ARG, kill the comment on the current line with
                            (mapconcat (lambda (str) str) masm-build-args " "))))
              (read-shell-command "Build command: " command)))))
   (setq masm--build-command-used command)
-  (if masm--program-type
+  (if masm--program-win64
       (let ((process-environment
              (append
               (list
@@ -681,29 +681,29 @@ With a prefix ARG, kill the comment on the current line with
 (defun masm-win32 ()
   "Change to Win32 highlighting."
   (interactive)
-  (setq-local masm--program-type nil)
+  (setq-local masm--program-win64 nil)
   (setq-local font-lock-keywords masm-win32-font-lock-keywords)
   (font-lock-flush))
 
 (defun masm-win64 ()
   "Change to Win64 highlighting."
   (interactive)
-  (setq-local masm--program-type t)
+  (setq-local masm--program-win64 t)
   (setq-local font-lock-keywords masm-win64-font-lock-keywords)
   (font-lock-flush))
 
 (defun masm-change-program-type ()
   "Switch program highlighting."
   (interactive)
-  (if masm--program-type
+  (if masm--program-win64
       (call-interactively #'masm-win32)
     (call-interactively #'masm-win64)))
 
 (defun masm-mode-before ()
-  "Make sure that file local variables work."
-  (unless (eql masm--program-type masm-program-type)
-    (setq masm--program-type masm-program-type)
-    (if masm-program-type
+  "Delay this to a hook instead of running it immediately, due the order in which file local variables are processed."
+  (unless (eql masm--program-win64 masm-program-win64)
+    (setq masm--program-win64 masm-program-win64)
+    (if masm-program-win64
         (setq-local font-lock-keywords masm-win64-font-lock-keywords)
       (setq-local font-lock-keywords masm-win32-font-lock-keywords))))
 
@@ -712,7 +712,7 @@ With a prefix ARG, kill the comment on the current line with
   "Major mode for editing MASM assembly programs."
   :group 'masm-mode
   (setq local-abbrev-table masm-mode-abbrev-table)
-  (if masm--program-type
+  (if masm--program-win64
       (setq-local font-lock-defaults '(masm-win64-font-lock-keywords nil :case-fold))
     (setq-local font-lock-defaults '(masm-win32-font-lock-keywords nil :case-fold)))
   (setq-local comment-start ";")
